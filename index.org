@@ -1,0 +1,361 @@
+#+STARTUP: showall
+
+#+OPTIONS: num:nil
+#+OPTIONS: toc:nil reveal_mathjax:t
+
+#+REVEAL_ROOT: file:///home/anand/.emacs.d/vendor/reveal.js/
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/reveal.js/3.0.0/
+
+
+#+REVEAL_TRANS: linear
+#+REVEAL-SLIDE-NUMBER: t
+#+REVEAL_THEME: simple
+
+# #+REVEAL_SLIDE_FOOTER: test - aaaaaaaaaaa
+
+
+#+BIND: org-confirm-babel-evaluate nil
+
+
+** How To Teach Unicode To Your Grandma?
+
+
+** Topics
+
+Brief introduction to UTF-8.
+
+Implemention of UTF-8 (RFC 3629).
+
+
+
+
+** Feel Free To Interrupt
+
+- Raise your hand
+
+- Stand up
+
+- Throw something
+
+
+** Brief Introduction To UTF-8
+
+
+** Quiz
+
+2 questions.
+
+30 seconds for each question.
+
+Winner gets a prize.
+
+
+
+** 1. What is the most widely used character encoding?
+
+** 2. ກ້ວຍມີຫົກກີບດອກເອີ້ນວ່າ?
+
+
+** DecodeError
+
+Your brains are facing EnglishDecodeError.
+
+You have assumed that this talk will be only in english even though I haven't explicitly mentioned it.
+
+With programs, UnicodeError will happen.
+
+
+** Human Encoding/Decoding
+
+What is this?
+
+#+attr_html: :width 600px
+[[./book.jpg]]
+
+
+
+** Object - Names
+
+| Object | Language | Name  |
+|--------+----------+-------|
+|  \_/   | English  | Book  |
+|  \_/   | Hindi    | किताब |
+|  \_/   | Lao      | ຫນັງສື  |
+
+Same object migt have different names in different languages.
+
+Two persons can communicate if they can speak a common language.
+
+Otherwise a translator is needed.
+
+
+
+
+
+** Computer Encoding/Decoding
+
+Computer hardware know only 1 & 0 (bytes).
+
+Computers can communicate only in 1 & 0.
+
+Humans use text (str).
+
+So, we need character encodings for text/byte conversion.
+
+
+** ASCII
+
+ASCII encodes 128 characters into seven-bit integers.
+
+| binary code | hex | dec | character |
+|-------------+-----+-----+-----------|
+| 0000 1010   |  0A |  10 | \n        |
+| 0100 0001   |  41 |  65 | A         |
+| 0110 0001   |  61 |  97 | a         |
+
+
+** More encodings
+
+128 characters are not sufficient.
+
+ISO Latin 1 is ASCII extended with 96 more symbols.
+
+Windows added 27 more symbols to produce CP1252.
+
+1 byte is not enough for entire world.
+
+
+
+
+** The Need For Unicode
+
+ISO/IEC 10646 is a standard for UCS.
+
+UCS contains has 128,000+ characters & is regularly updated.
+
+Unicode is a superset of UCS.
+
+Unicode defines additional properties of characters.
+
+UCS & Unicode remain in sync and preserve backward compatibility(excpet for Unicode 1.1).
+
+
+
+
+** Unicode
+
+Each character has a code point
+
+#+BEGIN_SRC python
+In [9]: codepoint('a')
+Out[9]: 'U+0061'
+#+END_SRC
+
+Each character has an unambiguous name
+
+#+BEGIN_SRC python
+In [10]: name('a')
+Out[10]: 'LATIN SMALL LETTER A'
+#+END_SRC
+
+
+
+** Unicode Transformation Formats
+
+Encoding format are required to convert Unicode from/to bytes.
+
+Several encoding formats for Unicode UTF-8, UCS-2, UTF-16, UCS-4 and UTF-32.
+
+
+
+
+** What encoding system?
+
+| bytes                | encoding system | character           |
+|----------------------+-----------------+---------------------|
+| 1100 1110  1011 0010 | utf-8           | β                   |
+| 1100 1110  1011 0010 | utf-16          | 닎                  |
+| 1100 1110  1011 0010 | utf-16be        | 캲                  |
+
+There is no way to know. You have to be told.
+
+You don't know which language a person speaks until.
+
+
+** Implemention of UTF-8 (RFC 3629).
+
+
+** Encoding
+
+Variable-width encoding: 1 - 4 bytes
+
+Range U+0000 - U+10FFFF
+
+3 types of bytes
+
+- Single Byte
+
+- Multiple Bytes
+
+  1 Leading Byte + 1 or more continuation bytes
+
+
+** Single Byte Characters
+
+
+| Char. range   | UTF-8 octet sequence | Bits  |
+| (hexadecimal) | (binary)             | (Dec) |
+|---------------+----------------------+-------|
+| 0000 - 007F   | 0xxxxxxx             | 7     |
+
+
+- Highest bit is set 0
+
+- US-ASCII characters are valid UTF-8 characters.
+
+- These characters don't appear in multi byte characters.
+
+- The octet values C0, C1, F5 - FF never appear.
+
+
+
+** Multi Byte Characters
+
+
+| Char. number range  | UTF-8 octet sequence                |  Bits |
+| (hexadecimal)       | (binary)                            | (Dec) |
+|---------------------+-------------------------------------+-------|
+| 0000 0080-0000 07FF | 110xxxxx 10xxxxxx                   |    11 |
+| 0000 0800-0000 FFFF | 1110xxxx 10xxxxxx 10xxxxxx          |    16 |
+| 0001 0000-0010 FFFF | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx |    21 |
+
+Leading bytes has the n higher-order bits set to 1, followed by a bit set to 0
+
+
+
+** How to encode
+
+Calculate bits/octets required from binary value of codepoint.
+
+Prepare higher order bits
+
+Fill bits with lowest order bit in last.
+
+Fill empty slots with zeros.
+
+
+
+** Demo
+
+
+
+
+
+
+** Byte Order Mark(U+FEFF)
+
+
+1. At the beginning of stream
+
+   Treated as a signature.
+
+   Recognize serialization order of the octets(endianess).
+
+2. Anywhere else
+
+   Normal "ZERO WIDTH NO-BREAK SPACE" character.
+
+
+
+
+** UTF-8 BOM
+
+For UTF-8, the BOM  will always appear as the octet sequence EF BB BF.
+
+Usage of BOM is discouraged by Unicode consortium.
+
+Programs(like excel) which don't use UTF-8 as default encoding might cause problem.
+
+
+
+
+** Security Concerns
+
+
+
+** IDN Homograph Attack
+
+- With homographs(different characters look alike), hackers may deceive about remote system.
+
+- http://ebаy.com/ and http://ebay.com/ look alike but they connect to different systems.
+
+#+BEGIN_SRC python
+In [5]: x = 'http://ebаy.com/'
+
+In [6]: y = 'http://ebay.com/'
+
+In [7]: x == y
+Out[7]: False
+
+In [22]: name('a')
+Out[22]: 'LATIN SMALL LETTER A'
+
+In [23]: name('а')
+Out[23]: 'CYRILLIC SMALL LETTER A'
+#+END_SRC
+
+Punycode - RFC 3492
+
+
+
+
+** Directory Traversal Attack
+
+- Hackers can exploit an incautious UTF-8 parser with illegal UTF-8 sequences
+
+- 0010 1111 | 0010 1110 | 0010 1110 | 0010 1111
+
+  URI containing octet sequence 2F 2E 2E 2F shouldn't be permitted.
+
+
+- 0010 1111 | 1100 0000  1010 1110 | 0010 1110 | 0010 1111
+
+  Illegal octet sequence 2F C0 AE 2E 2F might be permitted.
+
+
+
+
+** Salient Features Of UTF-8
+
+- Backward compatibility with ASCII.
+
+- Clear distinction between single-byte and multi-byte characters.
+
+- Clear indication of byte sequence length.
+
+- Prefix property & Self-synchronization.
+
+- Endian independent.
+
+
+
+** Resources
+
+- https://tools.ietf.org/html/rfc3629
+
+- http://www.unicode.org/versions/Unicode5.2.0/ch03.pdf
+
+- http://unicodebook.readthedocs.io/
+
+- http://nedbatchelder.com/text/unipain.html
+
+
+** Questions?
+
+Feedback: http://tiny.cc/unic
+
+Thanks to [[https://twitter.com/jaseemabid][@jaseemabid]] [[https://twitter.com/captn3m0][@captn3m0]] [[https://twitter.com/kracetheking][@kracetheking]]
+
+
+
+* Test
