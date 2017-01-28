@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title></title>
+<meta name="author" content="(chillaranand)"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/reveal.js/3.0.0/css/reveal.css"/>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/reveal.js/3.0.0/css/theme/simple.css" id="theme"/>
+
+
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = 'https://cdn.jsdelivr.net/reveal.js/3.0.0/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide"><h2 class="author">chillaranand</h2><p class="date">Created: 2017-01-28 శని 20:41</p>
+</section>
+
+
+</section>
+<section id="slide-org38e89a0">
+<h3 id="org38e89a0">How To Teach Unicode To Your Grandma?</h3>
+
+
+</section>
+<section id="slide-org98c7c67">
+<h3 id="org98c7c67">Topics</h3>
+<p>
+Brief introduction to UTF-8.
+</p>
+
+<p>
+Implemention of UTF-8 (RFC 3629).
+</p>
+
+
+
+
+</section>
+<section id="slide-org043c329">
+<h3 id="org043c329">Feel Free To Interrupt</h3>
+<ul>
+<li>Raise your hand</li>
+
+<li>Stand up</li>
+
+<li>Throw something</li>
+
+</ul>
+
+
+</section>
+<section id="slide-org863f0ae">
+<h3 id="org863f0ae">Brief Introduction To UTF-8</h3>
+
+
+</section>
+<section id="slide-orgd18def1">
+<h3 id="orgd18def1">Quiz</h3>
+<p>
+2 questions.
+</p>
+
+<p>
+30 seconds for each question.
+</p>
+
+<p>
+Winner gets a prize.
+</p>
+
+
+
+</section>
+<section id="slide-org3d5dfa2">
+<h3 id="org3d5dfa2">1. What is the most widely used character encoding?</h3>
+
+</section>
+<section id="slide-orgddc8e7a">
+<h3 id="orgddc8e7a">2. ກ້ວຍມີຫົກກີບດອກເອີ້ນວ່າ?</h3>
+
+
+</section>
+<section id="slide-org627b30a">
+<h3 id="org627b30a">DecodeError</h3>
+<p>
+Your brains are facing EnglishDecodeError.
+</p>
+
+<p>
+You have assumed that this talk will be only in english even though I haven't explicitly mentioned it.
+</p>
+
+<p>
+With programs, UnicodeError will happen.
+</p>
+
+
+</section>
+<section id="slide-org396682c">
+<h3 id="org396682c">Human Encoding/Decoding</h3>
+<p>
+What is this?
+</p>
+
+
+<div class="figure">
+<p><img src="./book.jpg" alt="book.jpg" width="600px" />
+</p>
+</div>
+
+
+
+</section>
+<section id="slide-org5de6e74">
+<h3 id="org5de6e74">Object - Names</h3>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Object</th>
+<th scope="col" class="org-left">Language</th>
+<th scope="col" class="org-left">Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">\_/</td>
+<td class="org-left">English</td>
+<td class="org-left">Book</td>
+</tr>
+
+<tr>
+<td class="org-left">\_/</td>
+<td class="org-left">Hindi</td>
+<td class="org-left">किताब</td>
+</tr>
+
+<tr>
+<td class="org-left">\_/</td>
+<td class="org-left">Lao</td>
+<td class="org-left">ຫນັງສື</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Same object migt have different names in different languages.
+</p>
+
+<p>
+Two persons can communicate if they can speak a common language.
+</p>
+
+<p>
+Otherwise a translator is needed.
+</p>
+
+
+
+
+
+</section>
+<section id="slide-org8bd1c7d">
+<h3 id="org8bd1c7d">Computer Encoding/Decoding</h3>
+<p>
+Computer hardware know only 1 &amp; 0 (bytes).
+</p>
+
+<p>
+Computers can communicate only in 1 &amp; 0.
+</p>
+
+<p>
+Humans use text (str).
+</p>
+
+<p>
+So, we need character encodings for text/byte conversion.
+</p>
+
+
+</section>
+<section id="slide-org1befae3">
+<h3 id="org1befae3">ASCII</h3>
+<p>
+ASCII encodes 128 characters into seven-bit integers.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">binary code</th>
+<th scope="col" class="org-right">hex</th>
+<th scope="col" class="org-right">dec</th>
+<th scope="col" class="org-left">character</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">0000 1010</td>
+<td class="org-right">0A</td>
+<td class="org-right">10</td>
+<td class="org-left">\n</td>
+</tr>
+
+<tr>
+<td class="org-left">0100 0001</td>
+<td class="org-right">41</td>
+<td class="org-right">65</td>
+<td class="org-left">A</td>
+</tr>
+
+<tr>
+<td class="org-left">0110 0001</td>
+<td class="org-right">61</td>
+<td class="org-right">97</td>
+<td class="org-left">a</td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+<section id="slide-org0dc20d3">
+<h3 id="org0dc20d3">More encodings</h3>
+<p>
+128 characters are not sufficient.
+</p>
+
+<p>
+ISO Latin 1 is ASCII extended with 96 more symbols.
+</p>
+
+<p>
+Windows added 27 more symbols to produce CP1252.
+</p>
+
+<p>
+1 byte is not enough for entire world.
+</p>
+
+
+
+
+</section>
+<section id="slide-org1f37de0">
+<h3 id="org1f37de0">The Need For Unicode</h3>
+<p>
+ISO/IEC 10646 is a standard for UCS.
+</p>
+
+<p>
+UCS contains has 128,000+ characters &amp; is regularly updated.
+</p>
+
+<p>
+Unicode is a superset of UCS.
+</p>
+
+<p>
+Unicode defines additional properties of characters.
+</p>
+
+<p>
+UCS &amp; Unicode remain in sync and preserve backward compatibility(excpet for Unicode 1.1).
+</p>
+
+
+
+
+</section>
+<section id="slide-org8381e04">
+<h3 id="org8381e04">Unicode</h3>
+<p>
+Each character has a code point
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-python">In [9]: codepoint(<span style="color: #8b2252;">'a'</span>)
+Out[9]: <span style="color: #8b2252;">'U+0061'</span>
+</pre>
+</div>
+
+<p>
+Each character has an unambiguous name
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-python">In [10]: name(<span style="color: #8b2252;">'a'</span>)
+Out[10]: <span style="color: #8b2252;">'LATIN SMALL LETTER A'</span>
+</pre>
+</div>
+
+
+
+</section>
+<section id="slide-org02cb1a8">
+<h3 id="org02cb1a8">Unicode Transformation Formats</h3>
+<p>
+Encoding format are required to convert Unicode from/to bytes.
+</p>
+
+<p>
+Several encoding formats for Unicode UTF-8, UCS-2, UTF-16, UCS-4 and UTF-32.
+</p>
+
+
+
+
+</section>
+<section id="slide-orgf94be36">
+<h3 id="orgf94be36">What encoding system?</h3>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">bytes</th>
+<th scope="col" class="org-left">encoding system</th>
+<th scope="col" class="org-left">character</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">1100 1110  1011 0010</td>
+<td class="org-left">utf-8</td>
+<td class="org-left">β</td>
+</tr>
+
+<tr>
+<td class="org-left">1100 1110  1011 0010</td>
+<td class="org-left">utf-16</td>
+<td class="org-left">닎</td>
+</tr>
+
+<tr>
+<td class="org-left">1100 1110  1011 0010</td>
+<td class="org-left">utf-16be</td>
+<td class="org-left">캲</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+There is no way to know. You have to be told.
+</p>
+
+<p>
+You don't know which language a person speaks until.
+</p>
+
+
+</section>
+<section id="slide-org190bfad">
+<h3 id="org190bfad">Implemention of UTF-8 (RFC 3629).</h3>
+
+
+</section>
+<section id="slide-org4466ced">
+<h3 id="org4466ced">Encoding</h3>
+<p>
+Variable-width encoding: 1 - 4 bytes
+</p>
+
+<p>
+Range U+0000 - U+10FFFF
+</p>
+
+<p>
+3 types of bytes
+</p>
+
+<ul>
+<li>Single Byte</li>
+
+<li><p>
+Multiple Bytes
+</p>
+
+<p>
+1 Leading Byte + 1 or more continuation bytes
+</p></li>
+
+</ul>
+
+
+</section>
+<section id="slide-orgac14927">
+<h3 id="orgac14927">Single Byte Characters</h3>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Char. range</th>
+<th scope="col" class="org-left">UTF-8 octet sequence</th>
+<th scope="col" class="org-left">Bits</th>
+</tr>
+
+<tr>
+<th scope="col" class="org-left">(hexadecimal)</th>
+<th scope="col" class="org-left">(binary)</th>
+<th scope="col" class="org-left">(Dec)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">0000 - 007F</td>
+<td class="org-left">0xxxxxxx</td>
+<td class="org-left">7</td>
+</tr>
+</tbody>
+</table>
+
+
+<ul>
+<li>Highest bit is set 0</li>
+
+<li>US-ASCII characters are valid UTF-8 characters.</li>
+
+<li>These characters don't appear in multi byte characters.</li>
+
+<li>The octet values C0, C1, F5 - FF never appear.</li>
+
+</ul>
+
+
+
+</section>
+<section id="slide-orgc842f5d">
+<h3 id="orgc842f5d">Multi Byte Characters</h3>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Char. number range</th>
+<th scope="col" class="org-left">UTF-8 octet sequence</th>
+<th scope="col" class="org-right">Bits</th>
+</tr>
+
+<tr>
+<th scope="col" class="org-left">(hexadecimal)</th>
+<th scope="col" class="org-left">(binary)</th>
+<th scope="col" class="org-right">(Dec)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">0000 0080-0000 07FF</td>
+<td class="org-left">110xxxxx 10xxxxxx</td>
+<td class="org-right">11</td>
+</tr>
+
+<tr>
+<td class="org-left">0000 0800-0000 FFFF</td>
+<td class="org-left">1110xxxx 10xxxxxx 10xxxxxx</td>
+<td class="org-right">16</td>
+</tr>
+
+<tr>
+<td class="org-left">0001 0000-0010 FFFF</td>
+<td class="org-left">11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</td>
+<td class="org-right">21</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Leading bytes has the n higher-order bits set to 1, followed by a bit set to 0
+</p>
+
+
+
+</section>
+<section id="slide-org15ab304">
+<h3 id="org15ab304">How to encode</h3>
+<p>
+Calculate bits/octets required from binary value of codepoint.
+</p>
+
+<p>
+Prepare higher order bits
+</p>
+
+<p>
+Fill bits with lowest order bit in last.
+</p>
+
+<p>
+Fill empty slots with zeros.
+</p>
+
+
+
+</section>
+<section id="slide-org3ad269e">
+<h3 id="org3ad269e">Demo</h3>
+
+
+
+
+
+
+</section>
+<section id="slide-org0c2cbee">
+<h3 id="org0c2cbee">Byte Order Mark(U+FEFF)</h3>
+<ol>
+<li><p>
+At the beginning of stream
+</p>
+
+<p>
+Treated as a signature.
+</p>
+
+<p>
+Recognize serialization order of the octets(endianess).
+</p></li>
+
+<li><p>
+Anywhere else
+</p>
+
+<p>
+Normal "ZERO WIDTH NO-BREAK SPACE" character.
+</p></li>
+
+</ol>
+
+
+
+
+</section>
+<section id="slide-org8e61dda">
+<h3 id="org8e61dda">UTF-8 BOM</h3>
+<p>
+For UTF-8, the BOM  will always appear as the octet sequence EF BB BF.
+</p>
+
+<p>
+Usage of BOM is discouraged by Unicode consortium.
+</p>
+
+<p>
+Programs(like excel) which don't use UTF-8 as default encoding might cause problem.
+</p>
+
+
+
+
+</section>
+<section id="slide-orge744687">
+<h3 id="orge744687">Security Concerns</h3>
+
+
+
+</section>
+<section id="slide-org9ec182d">
+<h3 id="org9ec182d">IDN Homograph Attack</h3>
+<ul>
+<li>With homographs(different characters look alike), hackers may deceive about remote system.</li>
+
+<li><a href="http://ebаy.com/">http://ebаy.com/</a> and <a href="http://ebay.com/">http://ebay.com/</a> look alike but they connect to different systems.</li>
+
+</ul>
+
+<div class="org-src-container">
+
+<pre  class="src src-python">In [5]: <span style="color: #a0522d;">x</span> = <span style="color: #8b2252;">'http://eb&#1072;y.com/'</span>
+
+In [6]: <span style="color: #a0522d;">y</span> = <span style="color: #8b2252;">'http://ebay.com/'</span>
+
+In [7]: x == y
+Out[7]: <span style="color: #008b8b;">False</span>
+
+In [22]: name(<span style="color: #8b2252;">'a'</span>)
+Out[22]: <span style="color: #8b2252;">'LATIN SMALL LETTER A'</span>
+
+In [23]: name(<span style="color: #8b2252;">'&#1072;'</span>)
+Out[23]: <span style="color: #8b2252;">'CYRILLIC SMALL LETTER A'</span>
+</pre>
+</div>
+
+<p>
+Punycode - RFC 3492
+</p>
+
+
+
+
+</section>
+<section id="slide-org44597e8">
+<h3 id="org44597e8">Directory Traversal Attack</h3>
+<ul>
+<li>Hackers can exploit an incautious UTF-8 parser with illegal UTF-8 sequences</li>
+
+<li><p>
+0010 1111 | 0010 1110 | 0010 1110 | 0010 1111
+</p>
+
+<p>
+URI containing octet sequence 2F 2E 2E 2F shouldn't be permitted.
+</p></li>
+
+</ul>
+
+
+<ul>
+<li><p>
+0010 1111 | 1100 0000  1010 1110 | 0010 1110 | 0010 1111
+</p>
+
+<p>
+Illegal octet sequence 2F C0 AE 2E 2F might be permitted.
+</p></li>
+
+</ul>
+
+
+
+
+</section>
+<section id="slide-orgc097858">
+<h3 id="orgc097858">Salient Features Of UTF-8</h3>
+<ul>
+<li>Backward compatibility with ASCII.</li>
+
+<li>Clear distinction between single-byte and multi-byte characters.</li>
+
+<li>Clear indication of byte sequence length.</li>
+
+<li>Prefix property &amp; Self-synchronization.</li>
+
+<li>Endian independent.</li>
+
+</ul>
+
+
+
+</section>
+<section id="slide-org1e0b249">
+<h3 id="org1e0b249">Resources</h3>
+<ul>
+<li><a href="https://tools.ietf.org/html/rfc3629">https://tools.ietf.org/html/rfc3629</a></li>
+
+<li><a href="http://www.unicode.org/versions/Unicode5.2.0/ch03.pdf">http://www.unicode.org/versions/Unicode5.2.0/ch03.pdf</a></li>
+
+<li><a href="http://unicodebook.readthedocs.io/">http://unicodebook.readthedocs.io/</a></li>
+
+<li><a href="http://nedbatchelder.com/text/unipain.html">http://nedbatchelder.com/text/unipain.html</a></li>
+
+</ul>
+
+
+</section>
+<section id="slide-orge1d2df4">
+<h3 id="orge1d2df4">Questions?</h3>
+<p>
+Feedback: <a href="http://tiny.cc/unic">http://tiny.cc/unic</a>
+</p>
+
+<p>
+Thanks to <a href="https://twitter.com/jaseemabid">@jaseemabid</a> <a href="https://twitter.com/captn3m0">@captn3m0</a> <a href="https://twitter.com/kracetheking">@kracetheking</a>
+</p>
+
+
+
+</section>
+</section>
+<section>
+<section id="slide-orgd5fb551">
+<h2 id="orgd5fb551">Test</h2>
+</section>
+</section>
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/reveal.js/3.0.0/lib/js/head.min.js"></script>
+<script src="https://cdn.jsdelivr.net/reveal.js/3.0.0/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: true,
+progress: true,
+history: false,
+center: true,
+slideNumber: 'c',
+rollingLinks: false,
+keyboard: true,
+overview: true,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'linear', // default/cube/page/concave/zoom/linear/fade/none
+transitionSpeed: 'default',
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: 'https://cdn.jsdelivr.net/reveal.js/3.0.0/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+ { src: 'https://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: 'https://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: 'https://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+ { src: 'https://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+});
+</script>
+</body>
+</html>
